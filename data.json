@@ -1,14 +1,25 @@
 {
-    "users": [
-        {
-            "id": 1,
-            "name": "John Doe",
-            "email": "johndoe@example.com"
-        },
-        {
-            "id": 2,
-            "name": "Jane Smith",
-            "email": "janesmith@example.com"
-        }
-    ]
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "username": "johndoe",
+      "password": "$test123#"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "janesmith@example.com",
+      "username": "janesmith",
+      "password": "$test123#"
+    },
+    {
+      "id": 3,
+      "name": "Srinivasa Rao Imandi",
+      "email": "srinivasaimandi@example.com",
+      "username": "srinivasaimandi",
+      "password": "$test123#"
+    }
+  ]
 }
