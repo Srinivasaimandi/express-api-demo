@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-let data = require('./data.json');
+let data = require('../data.json');
 
 // Get all users
 router.get('/', (req, res) => {

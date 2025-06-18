@@ -1,5 +1,5 @@
 const express = require('express');
-const userRoutes = require('./users');
+const userRoutes = require('./routes/users');
 const loginRoutes = require('./routes/login');
 const { apiKeyAuth } = require('./middleware/auth');
 
