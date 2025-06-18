@@ -31,7 +31,11 @@ app.use('/api', loginRoutes);
 
 // --- GraphQL Setup ---
 async function startApolloServer() {
-    const server = new ApolloServer({ typeDefs, resolvers });
+    const server = new ApolloServer({ 
+        typeDefs, 
+        resolvers,
+        introspection: true 
+    });
     await server.start();
     server.applyMiddleware({ app, path: '/graphql' });
 
