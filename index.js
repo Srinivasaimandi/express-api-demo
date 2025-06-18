@@ -4,6 +4,8 @@ const loginRoutes = require('./routes/login');
 const { apiKeyAuth } = require('./middleware/auth');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
+const { ApolloServer } = require('apollo-server-express');
+const { typeDefs, resolvers } = require('./graphql');
 
 const app = express();
 const PORT = 9899;
@@ -27,13 +29,19 @@ app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Public routes
 app.use('/api', loginRoutes);
 
-// API key authorization middleware (protects all routes below)
-app.use(apiKeyAuth);
+// --- GraphQL Setup ---
+async function startApolloServer() {
+    const server = new ApolloServer({ typeDefs, resolvers });
+    await server.start();
+    server.applyMiddleware({ app, path: '/graphql' });
 
-// Protected routes
-app.use('/api/users', userRoutes);
+    // Protected routes (apply apiKeyAuth only here)
+    app.use('/api/users', apiKeyAuth, userRoutes);
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+        console.log(`Swagger API Docs are at http://localhost:${PORT}/api-docs/`);
+        console.log(`GraphQL endpoint at http://localhost:${PORT}/graphql`);
+    });
+}
+startApolloServer();
