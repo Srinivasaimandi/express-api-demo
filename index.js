@@ -30,6 +30,24 @@ app.get('/api/users', (req, res) => {
     res.json(data.users);
 });
 
+app.get('/api/users/search', (req, res) => {
+    const { name, email } = req.query;
+    let results = data.users;
+
+    if (name) {
+        results = results.filter(user => user.name.toLowerCase().includes(name.toLowerCase()));
+    }
+    if (email) {
+        results = results.filter(user => user.email.toLowerCase().includes(email.toLowerCase()));
+    }
+
+    res.json(results);
+});
+
+app.get('/api/users/count', (req, res) => {
+    res.json({ count: data.users.length });
+});
+
 app.get('/api/users/:id', (req, res) => {
     const userId = parseInt(req.params.id, 10);
     const user = data.users.find(user => user.id === userId);
@@ -81,22 +99,4 @@ app.delete('/api/users/:id', (req, res) => {
     } else {
         res.status(404).json({ message: 'User not found' });
     }
-});
-
-app.get('/api/users/search', (req, res) => {
-    const { name, email } = req.query;
-    let results = data.users;
-
-    if (name) {
-        results = results.filter(user => user.name.toLowerCase().includes(name.toLowerCase()));
-    }
-    if (email) {
-        results = results.filter(user => user.email.toLowerCase().includes(email.toLowerCase()));
-    }
-
-    res.json(results);
-});
-
-app.get('/api/users/count', (req, res) => {
-    res.json({ count: data.users.length });
 });
