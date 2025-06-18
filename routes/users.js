@@ -1,88 +1,29 @@
 const express = require('express');
 const router = express.Router();
-
-let data = require('../data.json');
+const userController = require('../controllers/userController');
 
 // Get all users
-router.get('/', (req, res) => {
-    res.json(data.users);
-});
+router.get('/', userController.getAllUsers);
 
 // Search users
-router.get('/search', (req, res) => {
-    const { name, email } = req.query;
-    let results = data.users;
-
-    if (name) {
-        results = results.filter(user => user.name.toLowerCase().includes(name.toLowerCase()));
-    }
-    if (email) {
-        results = results.filter(user => user.email.toLowerCase().includes(email.toLowerCase()));
-    }
-
-    res.json(results);
-});
+router.get('/search', userController.searchUsers);
 
 // Get user count
-router.get('/count', (req, res) => {
-    res.json({ count: data.users.length });
-});
+router.get('/count', userController.getUserCount);
 
 // Get user by ID
-router.get('/:id', (req, res) => {
-    const userId = parseInt(req.params.id, 10);
-    const user = data.users.find(user => user.id === userId);
-    
-    if (user) {
-        res.json(user);
-    } else {
-        res.status(404).json({ message: 'User not found' });
-    }
-});
+router.get('/:id', userController.getUserById);
 
 // Create new user
-router.post('/', (req, res) => {
-    const newUser = req.body;
-    newUser.id = data.users.length + 1;
-    data.users.push(newUser);
-    res.status(201).json(newUser);
-});
+router.post('/', userController.createUser);
 
 // Bulk add users
-router.post('/bulk', (req, res) => {
-    const newUsers = req.body;
-    newUsers.forEach(user => {
-        user.id = data.users.length + 1;
-        data.users.push(user);
-    });
-    res.status(201).json(newUsers);
-});
+router.post('/bulk', userController.bulkAddUsers);
 
 // Update user
-router.put('/:id', (req, res) => {
-    const userId = parseInt(req.params.id, 10);
-    const userIndex = data.users.findIndex(user => user.id === userId);
-
-    if (userIndex !== -1) {
-        const updatedUser = { ...data.users[userIndex], ...req.body };
-        data.users[userIndex] = updatedUser;
-        res.json(updatedUser);
-    } else {
-        res.status(404).json({ message: 'User not found' });
-    }
-});
+router.put('/:id', userController.updateUser);
 
 // Delete user
-router.delete('/:id', (req, res) => {
-    const userId = parseInt(req.params.id, 10);
-    const userIndex = data.users.findIndex(user => user.id === userId);
-
-    if (userIndex !== -1) {
-        data.users.splice(userIndex, 1);
-        res.status(204).send({message: 'User deleted successfully'});
-    } else {
-        res.status(404).json({ message: 'User not found' });
-    }
-});
+router.delete('/:id', userController.deleteUser);
 
 module.exports = router;
