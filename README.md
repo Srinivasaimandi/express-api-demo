@@ -13,8 +13,10 @@ This repository contains demo api developed to server the automation purpose for
 - start the app:
   
     **```npm start```**
+    
 
-To know more about this demo api, read the [swagger-api-docs][4]
+  
+**NOTE**: To know more about this demo api, start the app and then read the [swagger-api-docs][4]
 
 
 
