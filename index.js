@@ -49,6 +49,15 @@ app.post('/api/users', (req, res) => {
 
 });
 
+app.post('/api/users/bulk', (req, res) => {
+    const newUsers = req.body;
+    newUsers.forEach(user => {
+        user.id = data.users.length + 1;
+        data.users.push(user);
+    });
+    res.status(201).json(newUsers);
+});
+
 app.put('/api/users/:id', (req, res) => {
     const userId = parseInt(req.params.id, 10);
     const userIndex = data.users.findIndex(user => user.id === userId);
@@ -72,4 +81,22 @@ app.delete('/api/users/:id', (req, res) => {
     } else {
         res.status(404).json({ message: 'User not found' });
     }
+});
+
+app.get('/api/users/search', (req, res) => {
+    const { name, email } = req.query;
+    let results = data.users;
+
+    if (name) {
+        results = results.filter(user => user.name.toLowerCase().includes(name.toLowerCase()));
+    }
+    if (email) {
+        results = results.filter(user => user.email.toLowerCase().includes(email.toLowerCase()));
+    }
+
+    res.json(results);
+});
+
+app.get('/api/users/count', (req, res) => {
+    res.json({ count: data.users.length });
 });
