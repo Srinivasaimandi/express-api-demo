@@ -1,0 +1,37 @@
+const swaggerJSDoc = require('swagger-jsdoc');
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Express Demo API',
+      version: '1.0.0',
+      description: 'API documentation for the Express Demo API',
+    },
+    servers: [
+      {
+        url: 'http://localhost:9899/api',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'x-api-key',
+          description: 'API key required for all endpoints except /login',
+        },
+      },
+    },
+    security: [
+      {
+        ApiKeyAuth: [],
+      },
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+module.exports = swaggerSpec;
