@@ -1,3 +1,7 @@
+/**
+ * @author: srinivasaimandi
+ */
+
 class User {
     constructor({ id, name, email, username, password }) {
         this.id = id;

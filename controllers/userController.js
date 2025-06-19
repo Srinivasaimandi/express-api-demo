@@ -1,3 +1,7 @@
+/**
+ * @author: srinivasaimandi
+ */
+
 let data = require("../data.json");
 const User = require("../models/User");
 

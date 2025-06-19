@@ -1,3 +1,7 @@
+/**
+ * @author: srinivasaimandi
+ */
+
 const swaggerJSDoc = require('swagger-jsdoc');
 
 const options = {

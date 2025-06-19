@@ -1,3 +1,7 @@
+/**
+ * @author: srinivasaimandi
+ */
+
 const { gql } = require('apollo-server-express');
 const data = require('./data.json');
 
