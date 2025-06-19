@@ -79,9 +79,9 @@ exports.createUser = (req, res) => {
 exports.bulkAddUsers = (req, res) => {
     const newUsersData = req.body;
     const newUsers = newUsersData.map(
-        (userData) =>
+        (userData, index) =>
             new User({
-                id: data.users.length + 1,
+                id: data.users.length + index + 1,
                 name: userData.name,
                 email: userData.email,
                 username: userData.username,
