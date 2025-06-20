@@ -12,6 +12,15 @@ const typeDefs = gql`
     email: String!
     username: String!
     password: String!
+    posts: [Post!]!
+  }
+
+  type Post {
+    id: Int!
+    userId: Int!
+    title: String!
+    content: String!
+    user: User!
   }
 
   type Query {
@@ -19,6 +28,9 @@ const typeDefs = gql`
     user(id: Int!): User
     searchUsers(name: String, email: String): [User!]!
     userCount: Int!
+    posts: [Post!]!
+    post(id: Int!): Post
+    postsByUser(userId: Int!): [Post!]!
   }
 
   type Mutation {
@@ -37,6 +49,7 @@ const typeDefs = gql`
       password: String
     ): User
     deleteUser(id: Int!): Boolean!
+    createPost(userId: Int!, title: String!, content: String!): Post!
   }
 
   input NewUserInput {
@@ -48,6 +61,12 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  User: {
+    posts: (parent) => data.posts.filter(post => post.userId === parent.id),
+  },
+  Post: {
+    user: (parent) => data.users.find(user => user.id === parent.userId),
+  },
   Query: {
     users: () => data.users,
     user: (_, { id }) => data.users.find(u => u.id === id),
@@ -62,6 +81,9 @@ const resolvers = {
       return results;
     },
     userCount: () => data.users.length,
+    posts: () => data.posts,
+    post: (_, { id }) => data.posts.find(post => post.id === id),
+    postsByUser: (_, { userId }) => data.posts.filter(post => post.userId === userId),
   },
   Mutation: {
     createUser: (_, { name, email, username, password }) => {
@@ -111,6 +133,16 @@ const resolvers = {
       if (userIndex === -1) return false;
       data.users.splice(userIndex, 1);
       return true;
+    },
+    createPost: (_, { userId, title, content }) => {
+      const newPost = {
+        id: data.posts.length + 1,
+        userId,
+        title,
+        content
+      };
+      data.posts.push(newPost);
+      return newPost;
     },
   },
 };

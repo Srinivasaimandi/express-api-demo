@@ -5,6 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const postRoutes = require('./posts');
 
 /**
  * @swagger
@@ -202,5 +203,7 @@ router.put('/:id', userController.updateUser);
  *         description: User not found
  */
 router.delete('/:id', userController.deleteUser);
+
+router.use('/:userId/posts', postRoutes);
 
 module.exports = router;

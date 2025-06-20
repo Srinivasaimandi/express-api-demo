@@ -4,6 +4,7 @@
 
 const express = require('express');
 const userRoutes = require('./routes/users');
+const postRoutes = require('./routes/posts');
 const loginRoutes = require('./routes/login');
 const { apiKeyAuth } = require('./middleware/auth');
 const swaggerUi = require('swagger-ui-express');
@@ -45,6 +46,7 @@ async function startApolloServer() {
 
     // Protected routes (apply apiKeyAuth only here)
     app.use('/api/users', apiKeyAuth, userRoutes);
+    app.use('/api/users/:userId/posts', apiKeyAuth, postRoutes);
 
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
