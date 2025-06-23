@@ -71,8 +71,9 @@ const resolvers = {
       ) {
         throw new Error('Email or username already exists');
       }
+      const maxId = data.users.reduce((max, user) => user.id > max ? user.id : max, 0);
       const newUser = {
-        id: data.users.length + 1,
+        id: maxId + 1,
         name,
         email,
         username,
@@ -83,7 +84,8 @@ const resolvers = {
     },
     bulkAddUsers: (_, { users: newUsers }) => {
       const addedUsers = [];
-      newUsers.forEach(userData => {
+      const maxId = data.users.reduce((max, user) => user.id > max ? user.id : max, 0);
+      newUsers.forEach(userData, index => {
         if (
           data.users.some(u => u.email === userData.email) ||
           data.users.some(u => u.username === userData.username)
@@ -92,7 +94,7 @@ const resolvers = {
           return;
         }
         const newUser = {
-          id: data.users.length + 1,
+          id: maxId + index + 2,
           ...userData,
         };
         data.users.push(newUser);
