@@ -44,8 +44,9 @@ exports.getUserById = (req, res) => {
 
 exports.createUser = (req, res) => {
     const newUserData = req.body;
+    const maxId = data.users.reduce((max, user) => user.id > max ? user.id : max, 0);
     const newUser = new User({
-        id: data.users.length + 1,
+        id: maxId + 1,
         name: newUserData.name,
         email: newUserData.email,
         username: newUserData.username,
@@ -82,10 +83,11 @@ exports.createUser = (req, res) => {
 
 exports.bulkAddUsers = (req, res) => {
     const newUsersData = req.body;
+    const maxId = data.users.reduce((max, user) => user.id > max ? user.id : max, 0);
     const newUsers = newUsersData.map(
         (userData, index) =>
             new User({
-                id: data.users.length + index + 1,
+                id: maxId + index + 2,
                 name: userData.name,
                 email: userData.email,
                 username: userData.username,
