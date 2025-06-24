@@ -37,6 +37,7 @@ const typeDefs = gql`
       password: String
     ): User
     deleteUser(id: Int!): Boolean!
+    resetData: Boolean!
   }
 
   input NewUserInput {
@@ -141,6 +142,22 @@ const resolvers = {
       data.users.splice(userIndex, 1);
       saveData(data);
       return true;
+    },
+    resetData: () => {
+      const backupPath = path.join(__dirname, './data-backup.json');
+      const dataPath = path.join(__dirname, './data.json');
+      try {
+        const backupContent = fs.readFileSync(backupPath, 'utf-8');
+        fs.writeFileSync(dataPath, backupContent, 'utf-8');
+        // Optionally clear require cache if you use require for data.json elsewhere
+        const dataJsonPath = require.resolve(dataPath);
+        if (require.cache[dataJsonPath]) {
+          delete require.cache[dataJsonPath];
+        }
+        return true;
+      } catch (error) {
+        return false;
+      }
     },
   },
 };

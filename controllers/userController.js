@@ -160,3 +160,23 @@ exports.deleteUser = (req, res) => {
     res.status(404).json({ message: "User not found" });
   }
 };
+
+exports.resetData = (req, res) => {
+  const backupPath = path.join(__dirname, '../data-backup.json');
+  const dataPath = path.join(__dirname, '../data.json');
+
+  try {
+    const backupContent = fs.readFileSync(backupPath, 'utf-8');
+    fs.writeFileSync(dataPath, backupContent, 'utf-8');
+
+    // Reset Node.js require cache for data.json
+    const dataJsonPath = require.resolve(dataPath);
+    if (require.cache[dataJsonPath]) {
+      delete require.cache[dataJsonPath];
+    }
+    
+    res.status(200).json({ message: 'Data has been reset from backup.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to reset data.', error: error.message });
+  }
+};
