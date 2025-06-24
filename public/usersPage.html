@@ -12,10 +12,13 @@
 <body>
   <div class="container">
     <div class="header-row">
-      <h1>Users List <button id="refresh-btn" title="Refresh users" style="background: none; border: none; cursor: pointer;">
-        <i class="fas fa-sync-alt fa-2x" style="color: #2c3e50;"></i>
-      </button></h1>
-      
+      <h1>Users List <button id="refresh-btn" title="Refresh users"
+          style="background: none; border: none; cursor: pointer;">
+          <i class="fas fa-sync-alt fa-2x" style="color: #2c3e50;"></i>
+        </button></h1>
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search by name or email..." />
+      </div>
       <a href="#" id="logout-link" class="logout-link">Logout</a>
     </div>
     <div class="error" id="error-msg" style="display:none;"></div>
@@ -63,7 +66,8 @@
         }
         const users = await response.json();
         if (Array.isArray(users) && users.length > 0) {
-          renderUsers(users);
+          allUsers = users;
+          renderUsers(allUsers);
           table.style.display = "";
         } else {
           errorMsg.textContent = "No users found.";
@@ -89,6 +93,23 @@
         tbody.appendChild(tr);
       });
     }
+
+    // Filter function
+    function filterUsers(query) {
+      const filtered = allUsers.filter(user =>
+        user.name.toLowerCase().includes(query.toLowerCase()) ||
+        user.email.toLowerCase().includes(query.toLowerCase())
+      );
+      renderUsers(filtered);
+    }
+
+    // Search listener
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', (e) => {
+        filterUsers(e.target.value);
+      });
+    });
 
     // Logout link clears token
     document.getElementById('logout-link').addEventListener('click', function (e) {
