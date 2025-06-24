@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Users List</title>
+  <link rel="stylesheet" href="./styles/usersStyles.css"
+</head>
+<body>
+  <div class="container">
+    <div class="header-row">
+      <h1>Users List</h1>
+      <a href="#" id="logout-link" class="logout-link">Logout</a>
+    </div>
+    <div class="error" id="error-msg" style="display:none;"></div>
+    <table id="users-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Username</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <script>
+    // Fetch and render users after login
+    async function fetchUsers() {
+      const token = localStorage.getItem('x-api-token');
+      const errorMsg = document.getElementById('error-msg');
+      const table = document.getElementById('users-table');
+      if (!token) {
+        errorMsg.textContent = "You must login first.";
+        errorMsg.style.display = "block";
+        return;
+      }
+      try {
+        const response = await fetch('/api/users', {
+            method: 'GET',
+          headers: { 
+            "Content-Type": "application/json",
+            'x-api-key': token }
+        });
+        if (response.status === 401 || response.status === 403) {
+          errorMsg.textContent = "Unauthorized. Please login again.";
+          errorMsg.style.display = "block";
+          localStorage.removeItem('x-api-token');
+          return;
+        }
+        if (response.status === 204) {
+          errorMsg.textContent = "No users found.";
+          errorMsg.style.display = "block";
+          return;
+        }
+        const users = await response.json();
+        if (Array.isArray(users) && users.length > 0) {
+          renderUsers(users);
+          table.style.display = "";
+        } else {
+          errorMsg.textContent = "No users found.";
+          errorMsg.style.display = "block";
+        }
+      } catch (err) {
+        errorMsg.textContent = "Failed to fetch users.";
+        errorMsg.style.display = "block";
+      }
+    }
+
+    function renderUsers(users) {
+      const tbody = document.querySelector('#users-table tbody');
+      tbody.innerHTML = "";
+      users.forEach(user => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${user.id}</td>
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.username}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Logout link clears token
+    document.getElementById('logout-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      localStorage.removeItem('x-api-token');
+      window.location.href = "index.html";
+    });
+
+    // On page load
+    fetchUsers();
+  </script>
+</body>
+</html>
