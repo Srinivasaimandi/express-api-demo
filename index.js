@@ -18,7 +18,7 @@ const PORT = 9899;
 
 // Middleware: Parse JSON
 app.use(express.json());
-
+app.use(express.static(path.join(__dirname, 'public')));
 // Middleware: Set Content-Type header for all responses
 app.use((req, res, next) => {
     // Don't set JSON content-type for Swagger UI or its assets
