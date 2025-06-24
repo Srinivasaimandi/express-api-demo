@@ -203,4 +203,35 @@ router.put('/:id', userController.updateUser);
  */
 router.delete('/:id', userController.deleteUser);
 
+/**
+ * @swagger
+ * /users/reset-data:
+ *   put:
+ *     summary: Reset user data from backup
+ *     tags: [Users]
+ *     description: Overwrites data.json with data-backup.json and clears cache.
+ *     responses:
+ *       200:
+ *         description: Data has been reset from backup and cache cleared.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Failed to reset data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
+router.put('/reset-data', userController.resetData);
+
 module.exports = router;
