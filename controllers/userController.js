@@ -2,47 +2,84 @@
  * @author: srinivasaimandi
  */
 
+const fs = require('fs');
+const path = require('path');
+
 const { getData, saveData } = require("../utils/dataUtils");
 const User = require("../models/User");
 
 exports.getAllUsers = (req, res) => {
-  const data = getData();
-  res.json(data.users);
+  try {
+    const data = getData();
+    if (data.users && data.users.length > 0) {
+      res.status(200).json(data.users);
+    } else {
+      // No Content
+      res.status(204).json([]);
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch users.", error: error.message });
+  }
 };
 
 exports.searchUsers = (req, res) => {
-  const data = getData();
-  const { name, email } = req.query;
-  let results = data.users;
+  try {
+    const data = getData();
+    const { name, email } = req.query;
+    let results = data.users;
 
-  if (name) {
-    results = results.filter((user) =>
-      user.name.toLowerCase().includes(name.toLowerCase())
-    );
-  }
-  if (email) {
-    results = results.filter((user) =>
-      user.email.toLowerCase().includes(email.toLowerCase())
-    );
-  }
+    if (name) {
+      results = results.filter((user) =>
+        user.name.toLowerCase().includes(name.toLowerCase())
+      );
+    }
+    if (email) {
+      results = results.filter((user) =>
+        user.email.toLowerCase().includes(email.toLowerCase())
+      );
+    }
 
-  res.json(results);
+    if (results.length > 0) {
+      res.status(200).json(results);
+    } else {
+      // No Content
+      res.status(204).json([]);
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to search users.", error: error.message });
+  }
 };
 
 exports.getUserCount = (req, res) => {
-  const data = getData();
-  res.json({ count: data.users.length });
+  try {
+    const data = getData();
+    res.status(200).json({ count: data.users.length });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to get user count.", error: error.message });
+  }
 };
 
 exports.getUserById = (req, res) => {
-  const data = getData();
-  const userId = parseInt(req.params.id, 10);
-  const user = data.users.find((user) => user.id === userId);
+  try {
+    const data = getData();
+    const userId = parseInt(req.params.id, 10);
+    const user = data.users.find((user) => user.id === userId);
 
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(404).json({ message: "User not found" });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch user.", error: error.message });
   }
 };
 
@@ -107,7 +144,7 @@ exports.bulkAddUsers = (req, res) => {
         password: userData.password,
       })
   );
-  newUsers.forEach((user) => {
+  for (const user of newUsers) {
     if (!user.name || !user.email || !user.username || !user.password) {
       return res
         .status(400)
@@ -127,7 +164,7 @@ exports.bulkAddUsers = (req, res) => {
     } else {
       data.users.push(user);
     }
-  });
+  }
   saveData(data);
   res.status(201).json(newUsers);
 };
@@ -138,10 +175,17 @@ exports.updateUser = (req, res) => {
   const userIndex = data.users.findIndex((user) => user.id === userId);
 
   if (userIndex !== -1) {
-    const updatedUser = { ...data.users[userIndex], ...req.body };
+    const allowedFields = ["name", "email", "username", "password"];
+    const updates = {};
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined) {
+        updates[key] = req.body[key];
+      }
+    }
+    const updatedUser = { ...data.users[userIndex], ...updates };
     data.users[userIndex] = updatedUser;
     saveData(data);
-    res.json(updatedUser);
+    res.status(200).json(updatedUser);
   } else {
     res.status(404).json({ message: "User not found" });
   }
@@ -166,17 +210,19 @@ exports.resetData = (req, res) => {
   const dataPath = path.join(__dirname, '../data.json');
 
   try {
-    const backupContent = fs.readFileSync(backupPath, 'utf-8');
-    fs.writeFileSync(dataPath, backupContent, 'utf-8');
+    const backupContent = fs.readFileSync(backupPath, "utf-8");
+    fs.writeFileSync(dataPath, backupContent, "utf-8");
 
     // Reset Node.js require cache for data.json
     const dataJsonPath = require.resolve(dataPath);
     if (require.cache[dataJsonPath]) {
       delete require.cache[dataJsonPath];
     }
-    
-    res.status(200).json({ message: 'Data has been reset from backup.' });
+
+    res.status(200).json({ message: "Data has been reset from backup." });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to reset data.', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to reset data.", error: error.message });
   }
 };

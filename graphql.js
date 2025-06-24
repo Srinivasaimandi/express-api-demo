@@ -2,6 +2,9 @@
  * @author: srinivasaimandi
  */
 
+const fs = require('fs');
+const path = require('path');
+
 const { gql } = require("apollo-server-express");
 const { getData, saveData } = require("./utils/dataUtils");
 
@@ -131,9 +134,22 @@ const resolvers = {
       const data = getData();
       const userIndex = data.users.findIndex((u) => u.id === id);
       if (userIndex === -1) return null;
-      data.users[userIndex] = { ...data.users[userIndex], ...updates };
-      saveData(data);
-      return data.users[userIndex];
+      else if (userIndex !== -1) {
+        const allowedFields = ["name", "email", "username", "password"];
+        const updates = {};
+        for (const key of allowedFields) {
+          if (req.body[key] !== undefined) {
+            updates[key] = req.body[key];
+          }
+        }
+        const updatedUser = { ...data.users[userIndex], ...updates };
+        data.users[userIndex] = updatedUser;
+        saveData(data);
+        return data.users[userIndex];
+      }
+      // data.users[userIndex] = { ...data.users[userIndex], ...updates };
+      // saveData(data);
+      // return data.users[userIndex];
     },
     deleteUser: (_, { id }) => {
       const data = getData();
@@ -144,11 +160,11 @@ const resolvers = {
       return true;
     },
     resetData: () => {
-      const backupPath = path.join(__dirname, './data-backup.json');
-      const dataPath = path.join(__dirname, './data.json');
+      const backupPath = path.join(__dirname, "./data-backup.json");
+      const dataPath = path.join(__dirname, "./data.json");
       try {
-        const backupContent = fs.readFileSync(backupPath, 'utf-8');
-        fs.writeFileSync(dataPath, backupContent, 'utf-8');
+        const backupContent = fs.readFileSync(backupPath, "utf-8");
+        fs.writeFileSync(dataPath, backupContent, "utf-8");
         // Optionally clear require cache if you use require for data.json elsewhere
         const dataJsonPath = require.resolve(dataPath);
         if (require.cache[dataJsonPath]) {
