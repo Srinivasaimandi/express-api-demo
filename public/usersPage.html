@@ -6,20 +6,41 @@
   <style>
     body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; }
     .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 40px; }
-    h1 { text-align: center; }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .header-row h1 {
+      margin: 0;
+      font-size: 2em;
+      color: #2c3e50;
+    }
+    .logout-link {
+      color: #3498db;
+      text-decoration: none;
+      font-size: 1em;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .logout-link:hover {
+      color: #2c80b4;
+      transform: scale(1.05);
+      text-decoration: none;
+    }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
     th { background: #3498db; color: #fff; }
     tr:hover { background: #f1f7ff; }
     .error { color: #e74c3c; text-align: center; margin-bottom: 10px; }
-    .links { text-align: center; margin-top: 20px; }
-    .links a { color: #3498db; text-decoration: none; margin: 0 10px; }
-    .links a:hover { color: #2c80b4; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Users List</h1>
+    <div class="header-row">
+      <h1>Users List</h1>
+      <a href="#" id="logout-link" class="logout-link">Logout</a>
+    </div>
     <div class="error" id="error-msg" style="display:none;"></div>
     <table id="users-table" style="display:none;">
       <thead>
@@ -32,10 +53,6 @@
       </thead>
       <tbody></tbody>
     </table>
-    <div class="links">
-      <a href="index.html">Home</a>
-      <a href="#" id="logout-link">Logout</a>
-    </div>
   </div>
   <script>
     // Fetch and render users after login
