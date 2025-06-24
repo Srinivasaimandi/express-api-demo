@@ -34,6 +34,7 @@
       display: flex;
       justify-content: center;
       gap: 30px;
+      
     }
     .links a {
       color: #3498db;
@@ -51,9 +52,22 @@
   <div class="container">
     <h1>Welcome to Users API</h1>
     <div class="links">
-      <a href="http://localhost:9899/api-docs/" target="_blank">Swagger Docs</a>|
-      <a href="http://localhost:9899/graphql" target="_blank">GraphQL</a>
+      <a id="swagger-link" href="#" target="_blank">Swagger Docs</a> |
+      <a id="graphql-link" href="#" target="_blank">GraphQL</a>
     </div>
   </div>
+  <script>
+    const hostname = window.location.hostname;
+    let baseUrl;
+
+    if (hostname === "localhost") {
+      baseUrl = "http://localhost:9899";
+    } else {
+      baseUrl = "https://express-api-demo-jyxx.onrender.com";
+    }
+
+    document.getElementById("swagger-link").href = `${baseUrl}/api-docs/`;
+    document.getElementById("graphql-link").href = `${baseUrl}/graphql`;
+  </script>
 </body>
 </html>
