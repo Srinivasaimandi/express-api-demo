@@ -2,8 +2,8 @@
  * @author: srinivasaimandi
  */
 
-const { gql } = require('apollo-server-express');
-const data = require('./data.json');
+const { gql } = require("apollo-server-express");
+const { getData, saveData } = require("./utils/dataUtils");
 
 const typeDefs = gql`
   type User {
@@ -49,29 +49,47 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    users: () => data.users,
-    user: (_, { id }) => data.users.find(u => u.id === id),
+    users: () => {
+      const data = getData();
+      return data.users;
+    },
+    user: (_, { id }) => {
+      const data = getData();
+      return data.users.find((u) => u.id === id);
+    },
     searchUsers: (_, { name, email }) => {
+      const data = getData();
       let results = data.users;
       if (name) {
-        results = results.filter(u => u.name.toLowerCase().includes(name.toLowerCase()));
+        results = results.filter((u) =>
+          u.name.toLowerCase().includes(name.toLowerCase())
+        );
       }
       if (email) {
-        results = results.filter(u => u.email.toLowerCase().includes(email.toLowerCase()));
+        results = results.filter((u) =>
+          u.email.toLowerCase().includes(email.toLowerCase())
+        );
       }
       return results;
     },
-    userCount: () => data.users.length,
+    userCount: () => {
+      const data = getData();
+      return data.users.length;
+    },
   },
   Mutation: {
     createUser: (_, { name, email, username, password }) => {
+      const data = getData();
       if (
-        data.users.some(u => u.email === email) ||
-        data.users.some(u => u.username === username)
+        data.users.some((u) => u.email === email) ||
+        data.users.some((u) => u.username === username)
       ) {
-        throw new Error('Email or username already exists');
+        throw new Error("Email or username already exists");
       }
-      const maxId = data.users.reduce((max, user) => user.id > max ? user.id : max, 0);
+      const maxId = data.users.reduce(
+        (max, user) => (user.id > max ? user.id : max),
+        0
+      );
       const newUser = {
         id: maxId + 1,
         name,
@@ -80,15 +98,20 @@ const resolvers = {
         password,
       };
       data.users.push(newUser);
+      saveData(data);
       return newUser;
     },
     bulkAddUsers: (_, { users: newUsers }) => {
+      const data = getData();
       const addedUsers = [];
-      const maxId = data.users.reduce((max, user) => user.id > max ? user.id : max, 0);
-      newUsers.forEach(userData, index => {
+      const maxId = data.users.reduce(
+        (max, user) => (user.id > max ? user.id : max),
+        0
+      );
+      newUsers.forEach(userData, (index) => {
         if (
-          data.users.some(u => u.email === userData.email) ||
-          data.users.some(u => u.username === userData.username)
+          data.users.some((u) => u.email === userData.email) ||
+          data.users.some((u) => u.username === userData.username)
         ) {
           // skip duplicates
           return;
@@ -100,18 +123,23 @@ const resolvers = {
         data.users.push(newUser);
         addedUsers.push(newUser);
       });
+      saveData(data);
       return addedUsers;
     },
     updateUser: (_, { id, ...updates }) => {
-      const userIndex = data.users.findIndex(u => u.id === id);
+      const data = getData();
+      const userIndex = data.users.findIndex((u) => u.id === id);
       if (userIndex === -1) return null;
       data.users[userIndex] = { ...data.users[userIndex], ...updates };
+      saveData(data);
       return data.users[userIndex];
     },
     deleteUser: (_, { id }) => {
-      const userIndex = data.users.findIndex(u => u.id === id);
+      const data = getData();
+      const userIndex = data.users.findIndex((u) => u.id === id);
       if (userIndex === -1) return false;
       data.users.splice(userIndex, 1);
+      saveData(data);
       return true;
     },
   },
