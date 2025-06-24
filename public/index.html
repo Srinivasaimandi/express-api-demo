@@ -4,55 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Users API</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      color: #333;
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.3em;
-    }
-    .container {
-      background-color: #fff;
-      padding: 40px 50px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      max-width: 700px;
-    }
-    h1 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-      font-size: 2.2em;
-    }
-    .links {
-      font-size: 1.3em;
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-    }
-    .links a {
-      color: #3498db;
-      text-decoration: none;
-      transition: color 0.3s ease, transform 0.3s ease;
-    }
-    .links a:hover {
-      color: #2c80b4;
-      transform: scale(1.05);
-      text-decoration: none;
-    }
-  </style>
+  <link rel="stylesheet" href="./styles/indexStyles.css"
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to Users API</h1>
-    <div class="links">
-      <a id="swagger-link" href="#" target="_blank">Swagger Docs</a> |
-      <a id="graphql-link" href="#" target="_blank">GraphQL</a>
+    <div class="main-content" id="main-content">
+      <h1>Welcome to Users API</h1>
+      <div class="links" id="links">
+        <a href="#" id="ui-link">UI</a> |
+        <a id="swagger-link" href="#" target="_blank">Swagger Docs</a> |
+        <a id="graphql-link" href="#" target="_blank">GraphQL</a>
+      </div>
+    </div>
+    <div class="login-container" id="login-container">
+      <h2>Login</h2>
+      <div class="error" id="login-error"></div>
+      <div class="success" id="login-success"></div>
+      <form id="login-form" autocomplete="off">
+        <input type="text" id="username" name="username" placeholder="Username" required />
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
     </div>
   </div>
   <script>
@@ -67,6 +39,50 @@
 
     document.getElementById("swagger-link").href = `${baseUrl}/api-docs/`;
     document.getElementById("graphql-link").href = `${baseUrl}/graphql`;
+
+    // UI link click handler
+    document.getElementById("ui-link").addEventListener("click", function(e) {
+      e.preventDefault();
+      document.getElementById("login-container").classList.add("active");
+    });
+
+    // Login form handler
+    document.getElementById("login-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("login-error");
+      const successMsg = document.getElementById("login-success");
+      errorMsg.style.display = "none";
+      successMsg.style.display = "none";
+      if (!username || !password) {
+        errorMsg.textContent = "Please enter both username and password.";
+        errorMsg.style.display = "block";
+        return;
+      }
+      try {
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await response.json();
+        if (response.ok && data.apiKey) {
+          localStorage.setItem("x-api-token", data.apiKey);
+          successMsg.textContent = "Login successful! Redirecting...";
+          successMsg.style.display = "block";
+          setTimeout(() => {
+            window.location.href = "usersPage.html";
+          }, 1000);
+        } else {
+          errorMsg.textContent = data.message || "Login failed.";
+          errorMsg.style.display = "block";
+        }
+      } catch (err) {
+        errorMsg.textContent = "Network error. Please try again.";
+        errorMsg.style.display = "block";
+      }
+    });
   </script>
 </body>
 </html>
