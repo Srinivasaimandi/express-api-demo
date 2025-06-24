@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Users List</title>
-  <link rel="stylesheet" href="./styles/usersStyles.css"
+  <link rel="stylesheet" href="./styles/usersStyles.css" <!-- Add this in <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
+
 <body>
   <div class="container">
     <div class="header-row">
-      <h1>Users List</h1>
+      <h1>Users List <button id="refresh-btn" title="Refresh users" style="background: none; border: none; cursor: pointer;">
+        <i class="fas fa-sync-alt fa-2x" style="color: #2c3e50;"></i>
+      </button></h1>
+      
       <a href="#" id="logout-link" class="logout-link">Logout</a>
     </div>
     <div class="error" id="error-msg" style="display:none;"></div>
@@ -37,10 +44,11 @@
       }
       try {
         const response = await fetch('/api/users', {
-            method: 'GET',
-          headers: { 
+          method: 'GET',
+          headers: {
             "Content-Type": "application/json",
-            'x-api-key': token }
+            'x-api-key': token
+          }
         });
         if (response.status === 401 || response.status === 403) {
           errorMsg.textContent = "Unauthorized. Please login again.";
@@ -83,14 +91,19 @@
     }
 
     // Logout link clears token
-    document.getElementById('logout-link').addEventListener('click', function(e) {
+    document.getElementById('logout-link').addEventListener('click', function (e) {
       e.preventDefault();
       localStorage.removeItem('x-api-token');
       window.location.href = "index.html";
+    });
+
+    document.getElementById('refresh-btn').addEventListener('click', function () {
+      fetchUsers();
     });
 
     // On page load
     fetchUsers();
   </script>
 </body>
+
 </html>
