@@ -22,11 +22,15 @@ app.use(express.json());
 // Middleware: Set Content-Type header for all responses
 app.use((req, res, next) => {
     // Don't set JSON content-type for Swagger UI or its assets
-    if (req.path.startsWith('/api-docs')) {
+    if (req.path.startsWith('/api-docs') || req.path.endsWith("/")) {
         return next();
     }
     res.setHeader('Content-Type', 'application/json');
     next();
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Serve Swagger UI at /api-docs/
@@ -50,9 +54,6 @@ async function startApolloServer() {
 
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
-        // Open index.html in the default browser
-        const filePath = path.join(__dirname, 'index.html');
-        exec(`open "${filePath}"`);
     });
 }
 startApolloServer();
