@@ -2,6 +2,8 @@
  * @author: srinivasaimandi
  */
 
+const path = require('path');
+const { exec } = require('child_process');
 const express = require('express');
 const userRoutes = require('./routes/users');
 const loginRoutes = require('./routes/login');
@@ -48,8 +50,9 @@ async function startApolloServer() {
 
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
-        console.log(`Swagger API Docs are at http://localhost:${PORT}/api-docs/`);
-        console.log(`GraphQL endpoint at http://localhost:${PORT}/graphql`);
+        // Open index.html in the default browser
+        const filePath = path.join(__dirname, 'index.html');
+        exec(`open "${filePath}"`);
     });
 }
 startApolloServer();
