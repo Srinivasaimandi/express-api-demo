@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Users API</title>
-  <link rel="stylesheet" href="./styles/indexStyles.css"
-</head>
+  <link rel="stylesheet" href="./styles/indexStyles.css" </head>
+
 <body>
   <div class="container">
     <div class="main-content" id="main-content">
-      <h1>Welcome to Users API</h1>
+      <h1 id="title-msg">Welcome to Users API</h1>
+      <div id="login-credentials" style="display: none;">
+        <code>
+        <p style="font-size: 1em;">login using valid credentials</p>
+          username: srinivasaimandi
+          <br>
+          password: $test123#
+        </code>
+      </div>
       <div class="links" id="links">
         <a href="#" id="ui-link">UI</a> |
         <a id="swagger-link" href="#" target="_blank">Swagger Docs</a> |
@@ -41,13 +50,18 @@
     document.getElementById("graphql-link").href = `${baseUrl}/graphql`;
 
     // UI link click handler
-    document.getElementById("ui-link").addEventListener("click", function(e) {
+    document.getElementById("ui-link").addEventListener("click", function (e) {
       e.preventDefault();
       document.getElementById("login-container").classList.add("active");
+
+      document.getElementById("title-msg").style.display = 'none';
+      document.getElementById("links").style.display = 'none';
+      document.getElementById("login-credentials").style.display = 'inline';
+
     });
 
     // Login form handler
-    document.getElementById("login-form").addEventListener("submit", async function(e) {
+    document.getElementById("login-form").addEventListener("submit", async function (e) {
       e.preventDefault();
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
@@ -85,4 +99,5 @@
     });
   </script>
 </body>
+
 </html>
