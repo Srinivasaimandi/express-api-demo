@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Middleware: Set Content-Type header for all responses
 app.use((req, res, next) => {
     // Don't set JSON content-type for Swagger UI or its assets
-    if (req.path.startsWith('/api-docs') || req.path.endsWith("/")) {
+    if (req.path.startsWith('/api-docs') || req.path.endsWith("9899")) {
         return next();
     }
     res.setHeader('Content-Type', 'application/json');
