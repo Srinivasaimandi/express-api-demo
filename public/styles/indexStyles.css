@@ -123,3 +123,15 @@ body {
       text-align: center;
       display: none;
     }
+
+    #back-arrow {
+      font-weight: lighter; 
+      font-size: 13px; 
+      text-decoration: none; 
+      color: #3498db; 
+      transform: scale(1.5);
+
+      position: fixed; 
+      top: 180px; 
+      left:350px; 
+    }
