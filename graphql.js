@@ -2,8 +2,8 @@
  * @author: srinivasaimandi
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const { gql } = require("apollo-server-express");
 const { getData, saveData } = require("./utils/dataUtils");
@@ -154,10 +154,13 @@ const resolvers = {
     deleteUser: (_, { id }) => {
       const data = getData();
       const userIndex = data.users.findIndex((u) => u.id === id);
-      if (userIndex === -1) return false;
-      data.users.splice(userIndex, 1);
-      saveData(data);
-      return true;
+      if (id === 3) return false;
+      else if (userIndex === -1) return false;
+      else {
+        data.users.splice(userIndex, 1);
+        saveData(data);
+        return true;
+      }
     },
     resetData: () => {
       const backupPath = path.join(__dirname, "./data-backup.json");

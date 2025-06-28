@@ -2,8 +2,8 @@
  * @author: srinivasaimandi
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const { getData, saveData } = require("../utils/dataUtils");
 const User = require("../models/User");
@@ -196,18 +196,22 @@ exports.deleteUser = (req, res) => {
   const userId = parseInt(req.params.id, 10);
   const userIndex = data.users.findIndex((user) => user.id === userId);
 
-  if (userIndex !== -1) {
+  if (userId === 3) {
+    return res
+      .status(403)
+      .json({ message: `User with id ${userId} is restricted from deleting` });
+  } else if (userIndex === -1) {
+    return res.status(404).json({ message: "User not found" });
+  } else {
     data.users.splice(userIndex, 1);
     saveData(data);
-    res.status(204).send({ message: "User deleted successfully" });
-  } else {
-    res.status(404).json({ message: "User not found" });
+    return res.status(204).send({ message: "User deleted successfully" });
   }
 };
 
 exports.resetData = (req, res) => {
-  const backupPath = path.join(__dirname, '../data-backup.json');
-  const dataPath = path.join(__dirname, '../data.json');
+  const backupPath = path.join(__dirname, "../data-backup.json");
+  const dataPath = path.join(__dirname, "../data.json");
 
   try {
     const backupContent = fs.readFileSync(backupPath, "utf-8");
