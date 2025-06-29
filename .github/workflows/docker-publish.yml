@@ -1,24 +1,10 @@
 name: Build and Push Docker Image
-# on:
-#   push:
-#     branches:
-#       - main
-#     paths:
-#       - "**.js"
-#       - "Dockerfile"
-#       - "package.json"
-#       - ".dockerignore"
-
 on:
-  workflow_dispatch:
-    inputs:
-      test-type: 
-        type: choice
-        description: choose the type of tests to run
-        options:
-          - api_demo
-          - ui_demo
-          - demo
+  push:
+    branches:
+      - main
+    paths:
+      - '**'
 
 jobs:
   build-and-push:
