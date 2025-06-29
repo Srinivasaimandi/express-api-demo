@@ -20,6 +20,41 @@
       "email": "srinivasaimandi@example.com",
       "username": "srinivasaimandi",
       "password": "$test123#"
+    },
+    {
+      "id": 4,
+      "name": "Emmie Friesen",
+      "email": "emmiefriesen@yahoo.com",
+      "username": "emmiefriesen",
+      "password": "$test123#"
+    },
+    {
+      "id": 5,
+      "name": "Clare Destiny",
+      "email": "claredestiny@yahoo.com",
+      "username": "claredestiny",
+      "password": "$test123#"
+    },
+    {
+      "id": 6,
+      "name": "Stevie Lloyd",
+      "email": "stevielloyd@yahoo.com",
+      "username": "stevielloyd",
+      "password": "$test123#"
+    },
+    {
+      "id": 7,
+      "name": "Vladimir Rossie",
+      "email": "vladimirrossie@yahoo.com",
+      "username": "vladimirrossie",
+      "password": "$test123#"
+    },
+    {
+      "id": 8,
+      "name": "Elsie Walker",
+      "email": "elsieealker@hotmail.com",
+      "username": "elsieealker",
+      "password": "$test123#"
     }
   ]
 }
