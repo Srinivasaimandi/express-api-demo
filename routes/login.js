@@ -2,10 +2,10 @@
  * @author: srinivasaimandi
  */
 
-const express = require('express');
-const crypto = require('crypto');
-const data = require('../data.json');
-const { addApiKey } = require('../middleware/auth');
+const express = require("express");
+const crypto = require("crypto");
+const data = require("../data/data.json");
+const { addApiKey } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -49,16 +49,18 @@ const router = express.Router();
  *                 message:
  *                   type: string
  */
-router.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    const user = data.users.find(u => u.username === username && u.password === password);
-    if (user) {
-        const newApiKey = crypto.randomUUID();
-        addApiKey(newApiKey);
-        res.json({ apiKey: newApiKey });
-    } else {
-        res.status(401).json({ message: 'Invalid credentials' });
-    }
+router.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  const user = data.users.find(
+    (u) => u.username === username && u.password === password
+  );
+  if (user) {
+    const newApiKey = crypto.randomUUID();
+    addApiKey(newApiKey);
+    res.json({ apiKey: newApiKey });
+  } else {
+    res.status(401).json({ message: "Invalid credentials" });
+  }
 });
 
 module.exports = router;

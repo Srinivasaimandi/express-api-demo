@@ -210,8 +210,8 @@ exports.deleteUser = (req, res) => {
 };
 
 exports.resetData = (req, res) => {
-  const backupPath = path.join(__dirname, "../data-backup.json");
-  const dataPath = path.join(__dirname, "../data.json");
+  const backupPath = path.join(__dirname, "../data/data-backup.json");
+  const dataPath = path.join(__dirname, "../data/data.json");
 
   try {
     const backupContent = fs.readFileSync(backupPath, "utf-8");
