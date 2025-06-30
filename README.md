@@ -1,6 +1,6 @@
 # Express API Demo
 ## ❓What is this Repository about?
-This repository contains demo api developed to server the automation purpose for my other repositories
+This repository contains demo users app developed to server the automation purpose for my other repositories
 
 ## ⌘ Getting Started
 **Prerequisite**
