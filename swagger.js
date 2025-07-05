@@ -17,6 +17,9 @@ const options = {
         url: "http://localhost:9899/api",
       },
       {
+        url: "http://raspberrypi.local:9899/api",
+      },
+      {
         url: "https://express-api-demo-jyxx.onrender.com/api",
       },
     ],
